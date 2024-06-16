@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
 
-function App() {
+export default function App() {
+  function handleSubmit(e) {
+    // Prevent the browser from reloading the page
+    e.preventDefault();
+
+    // Read the form data
+    const form = e.target;
+    const formData = new FormData(form);
+
+    // You can pass formData as a fetch body directly:
+    fetch('/some-api', { method: form.method, body: formData });
+
+    // Or you can work with it as a plain object:
+    const formJson = Object.fromEntries(formData.entries());
+    console.log(formJson);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload!
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <form method="post" onSubmit={handleSubmit}>
+      <label>
+        Text input: <input name="myInput" defaultValue="Some initial value" />
+      </label>
+      <hr />
+      <p>
+        Some image will be here:
+      </p>
+      <hr />
+      <button type="reset">Reset form</button>
+      <button type="submit">Submit form</button>
+    </form>
   );
 }
-
-export default App;
