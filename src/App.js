@@ -1,7 +1,7 @@
 
 export default function App() {
   function reqListener() {
-    console.log(this.responseText);
+    console.log(this.responseText["message"]["content"]);
   }
 
   function handleSubmit(e) {
@@ -15,14 +15,10 @@ export default function App() {
     const URL = "https://nvidia-contest-express-web-service.onrender.com";
     const query = URL + "/user/message?query=" + formData.get("myInput");
 
-    console.log("before sending request");
-
     const req = new XMLHttpRequest();
     req.addEventListener("load", reqListener);
     req.open("GET", query);
     req.send();
-
-    console.log("after sending request");
 
     // Or you can work with it as a plain object:
     //const formJson = Object.fromEntries(formData.entries());
