@@ -1,7 +1,7 @@
 
 export default function App() {
   function reqListener() {
-    console.log(this.responseXML);
+    console.log(this.responseText);
     //responseText["message"]["content"]
   }
 
