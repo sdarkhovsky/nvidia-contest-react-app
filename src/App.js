@@ -1,7 +1,8 @@
 
 export default function App() {
   function reqListener() {
-    console.log(this.responseText["message"]["content"]);
+    console.log(this.responseXML);
+    //responseText["message"]["content"]
   }
 
   function handleSubmit(e) {
