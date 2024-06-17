@@ -2,7 +2,6 @@
 export default function App() {
   function reqListener() {
     console.log(this.responseText);
-    //responseText["message"]["content"]
   }
 
   function handleSubmit(e) {
@@ -13,7 +12,12 @@ export default function App() {
     const form = e.target;
     const formData = new FormData(form);
 
-    const URL = "https://nvidia-contest-express-web-service.onrender.com";
+    const DEBUGGING_LOCAL = 1;
+
+    var URL = "https://nvidia-contest-express-web-service.onrender.com";
+    if (DEBUGGING_LOCAL)
+      URL = "http://localhost:10000";
+
     const query = URL + "/user/message?query=" + formData.get("myInput");
 
     const req = new XMLHttpRequest();
