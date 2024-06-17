@@ -1,5 +1,9 @@
 
 export default function App() {
+  function reqListener() {
+    console.log(this.responseText);
+  }
+
   function handleSubmit(e) {
     // Prevent the browser from reloading the page
     e.preventDefault();
@@ -8,18 +12,68 @@ export default function App() {
     const form = e.target;
     const formData = new FormData(form);
 
+    const URL = "https://nvidia-contest-express-web-service.onrender.com";
+    const query = URL + "/user/message?query=" + formData.get("myInput");
+
+    console.log("before sending request");
+
+    const req = new XMLHttpRequest();
+    req.addEventListener("load", reqListener);
+    req.open("GET", query);
+    req.send();
+
+    console.log("after sending request");
+
+    // Or you can work with it as a plain object:
+    //const formJson = Object.fromEntries(formData.entries());
+    //console.log(formJson);
+  }
+
+
+  function fetch_handleSubmit(e) {
+    // Prevent the browser from reloading the page
+    e.preventDefault();
+
+    // Read the form data
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const URL = "https://nvidia-contest-express-web-service.onrender.com";
+    const query = URL + "/user/message?query=" + formData.get("myInput");
+
     // You can pass formData as a fetch body directly:
-    fetch('/some-api', { method: form.method, body: formData });
+    fetch(query, { method: form.method, body: formData });
 
     // Or you can work with it as a plain object:
     const formJson = Object.fromEntries(formData.entries());
     console.log(formJson);
   }
 
+  async function async_fetch_handleSubmit(e) {
+    // Prevent the browser from reloading the page
+    e.preventDefault();
+
+    // Read the form data
+    const form = e.target;
+    const formData = new FormData(form);
+    const URL = "https://nvidia-contest-express-web-service.onrender.com";
+    const query = URL + "/user/message?query=" + formData.get("myInput");
+    console.log(query);    
+
+    // You can pass formData as a fetch body directly:
+    //fetch('/some-api', { method: form.method, body: formData });
+    const response = await fetch(query);
+    console.log(response);
+
+    // Or you can work with it as a plain object:
+    // const formJson = Object.fromEntries(formData.entries());
+    // console.log(formJson);
+  }
+
   return (
     <form method="post" onSubmit={handleSubmit}>
       <label>
-        Text input: <input name="myInput" defaultValue="Some initial value" />
+        Text input: <input name="myInput" defaultValue="How many people in the picture?" />
       </label>
       <hr />
       <p>
