@@ -1,13 +1,37 @@
 import React, { useState } from "react";
 
+const DEBUGGING_LOCAL = 1;
+const WEB_SERVICE_URL = "https://nvidia-contest-express-web-service.onrender.com";
+const LOCAL_URL = "http://localhost:10000";
+
 export default function App() {
-    const [file, setFile] = useState();
+    const [imageURL, setImageURL] = useState();
     function handleChange(e) {
-        console.log(e.target.files);
-        setFile(URL.createObjectURL(e.target.files[0]));
+
+        let url = URL.createObjectURL(e.target.files[0]);
+
+        let service_url = WEB_SERVICE_URL;
+        if (DEBUGGING_LOCAL)
+          service_url = LOCAL_URL;
+
+        //console.log(e.target.files[0]);
+        //console.log(url);
+        setImageURL(url);
+
+        e.preventDefault();
+
+        const query = service_url + "/user/image?imageURL=" + imageURL;
+
+        const req = new XMLHttpRequest();
+        req.addEventListener("load", reqListener);
+        req.open("GET", query);
+        req.send();
     }    
 
     function reqListener() {
+        if (this.responseText == "")
+            return;
+
         let responseElement = document.getElementsByName("response_label");
         //console.log(responseElement);
         responseElement[0].innerText = this.responseText;
@@ -15,6 +39,11 @@ export default function App() {
     }
 
     function handleSubmit(e) {
+
+        let service_url = WEB_SERVICE_URL;
+        if (DEBUGGING_LOCAL)
+          service_url = LOCAL_URL;
+
         // Prevent the browser from reloading the page
         e.preventDefault();
 
@@ -22,13 +51,7 @@ export default function App() {
         const form = e.target;
         const formData = new FormData(form);
 
-        const DEBUGGING_LOCAL = 0;
-
-        var URL = "https://nvidia-contest-express-web-service.onrender.com";
-        if (DEBUGGING_LOCAL)
-          URL = "http://localhost:10000";
-
-        const query = URL + "/user/message?query=" + formData.get("question_input");
+        const query = service_url + "/user/message?query=" + formData.get("question_input");
 
         const req = new XMLHttpRequest();
         req.addEventListener("load", reqListener);
@@ -43,9 +66,9 @@ export default function App() {
 
     return (
         <div className="App">
-            <h2>Add Image:</h2>
+            <h2>Select an Image:</h2>
             <input type="file" onChange={handleChange} />
-            <img src={file} />
+            <img src={imageURL} />
             <form method="post" onSubmit={handleSubmit}>
               <label>
                 Question: <input name="question_input" size="100" defaultValue="How many people in the picture?" />
