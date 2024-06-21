@@ -66,19 +66,25 @@ export default function App() {
 
     return (
         <div className="App">
-            <h2>Select an Image:</h2>
-            <input type="file" accept="image/*" onChange={handleChange} />
-            <img src={imageURL} />
             <form method="post" onSubmit={handleSubmit}>
-              <label>
-                Question: <input name="question_input" size="100" defaultValue="How many people in the picture?" />
-              </label>
-              <hr />
-              <label name="response_label">
-                Response will be placed here...
-              </label>
-              <hr />
-              <button type="submit">Submit question</button>
+              <div>
+                <h2>Select an Image:</h2>
+                <input type="file" accept=".jpg, .jpeg, .png" onChange={handleChange} />
+                <img src={imageURL} />
+              </div>
+              <div>
+                  <label>
+                    Question: <input name="question_input" size="100" defaultValue="How many people in the picture?" />
+                  </label>
+              </div>
+              <div>
+                  <label name="response_label">
+                    Response will be placed here...
+                  </label>
+              </div>
+              <div>
+                  <button type="submit">Submit question</button>
+              </div>
             </form>
         </div>            
     );
