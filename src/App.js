@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const DEBUGGING_LOCAL = 0;
+const DEBUGGING_LOCAL = 1;
 const WEB_SERVICE_URL = "https://nvidia-contest-express-web-service.onrender.com";
 const LOCAL_URL = "http://localhost:10000";
 
@@ -67,7 +67,7 @@ export default function App() {
     return (
         <div className="App">
             <h2>Select an Image:</h2>
-            <input type="file" onChange={handleChange} />
+            <input type="file" accept="image/*" onChange={handleChange} />
             <img src={imageURL} />
             <form method="post" onSubmit={handleSubmit}>
               <label>
