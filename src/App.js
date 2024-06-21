@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const DEBUGGING_LOCAL = 1;
+const DEBUGGING_LOCAL = 0;
 const WEB_SERVICE_URL = "https://nvidia-contest-express-web-service.onrender.com";
 const LOCAL_URL = "http://localhost:10000";
 
