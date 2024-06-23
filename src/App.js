@@ -3,35 +3,22 @@ import React, { useState } from "react";
 const DEBUGGING_LOCAL = 0;
 const WEB_SERVICE_URL = "https://nvidia-contest-express-web-service.onrender.com";
 const LOCAL_URL = "http://localhost:10000";
+var service_url = WEB_SERVICE_URL;
+if (DEBUGGING_LOCAL)
+  service_url = LOCAL_URL;
 
 export default function App() {
-    const [imageURL, setImageURL] = useState();
+    const [imagePath, setImagePath] = useState();
     function handleChange(e) {
 
         let url = URL.createObjectURL(e.target.files[0]);
 
-        let service_url = WEB_SERVICE_URL;
-        if (DEBUGGING_LOCAL)
-          service_url = LOCAL_URL;
-
         //console.log(e.target.files[0]);
         //console.log(url);
-        setImageURL(url);
-
-        e.preventDefault();
-
-        const query = service_url + "/user/image?imageURL=" + imageURL;
-
-        const req = new XMLHttpRequest();
-        req.addEventListener("load", reqListener);
-        req.open("GET", query);
-        req.send();
+        setImagePath(url);
     }    
 
     function reqListener() {
-        if (this.responseText == "")
-            return;
-
         let responseElement = document.getElementsByName("response_label");
         //console.log(responseElement);
         responseElement[0].innerText = this.responseText;
@@ -39,10 +26,6 @@ export default function App() {
     }
 
     function handleSubmit(e) {
-
-        let service_url = WEB_SERVICE_URL;
-        if (DEBUGGING_LOCAL)
-          service_url = LOCAL_URL;
 
         // Prevent the browser from reloading the page
         e.preventDefault();
@@ -66,19 +49,25 @@ export default function App() {
 
     return (
         <div className="App">
-            <h2>Select an Image:</h2>
-            <input type="file" onChange={handleChange} />
-            <img src={imageURL} />
             <form method="post" onSubmit={handleSubmit}>
-              <label>
-                Question: <input name="question_input" size="100" defaultValue="How many people in the picture?" />
-              </label>
-              <hr />
-              <label name="response_label">
-                Response will be placed here...
-              </label>
-              <hr />
-              <button type="submit">Submit question</button>
+              <div>
+                <h2>Select an Image:</h2>
+                <input type="file" accept=".jpg, .jpeg, .png" onChange={handleChange} />
+                <img src={imagePath} alt=""/>
+              </div>
+              <div>
+                  <label>
+                    Question: <input name="question_input" size="100" defaultValue="How many people in the picture?" />
+                  </label>
+              </div>
+              <div>
+                  <label name="response_label">
+                    Response will be placed here...
+                  </label>
+              </div>
+              <div>
+                  <button type="submit">Submit question</button>
+              </div>
             </form>
         </div>            
     );
