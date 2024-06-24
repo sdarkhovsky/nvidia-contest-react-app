@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from 'react';
+import './App.css';
 
-const DEBUGGING_LOCAL = 0;
+const DEBUGGING_LOCAL = 1;
 const WEB_SERVICE_URL = "https://nvidia-contest-express-web-service.onrender.com";
 const LOCAL_URL = "http://localhost:10000";
 var service_url = WEB_SERVICE_URL;
@@ -8,14 +10,14 @@ if (DEBUGGING_LOCAL)
   service_url = LOCAL_URL;
 
 export default function App() {
-    const [imagePath, setImagePath] = useState();
+    const [imageSrc, setImageSrc] = useState();
     function handleChange(e) {
 
         let url = URL.createObjectURL(e.target.files[0]);
 
         //console.log(e.target.files[0]);
         //console.log(url);
-        setImagePath(url);
+        setImageSrc(url);
     }    
 
     function reqListener() {
@@ -48,27 +50,25 @@ export default function App() {
 
 
     return (
-        <div className="App">
-            <form method="post" onSubmit={handleSubmit}>
-              <div>
-                <h2>Select an Image:</h2>
-                <input type="file" accept=".jpg, .jpeg, .png" onChange={handleChange} />
-                <img src={imagePath} alt=""/>
-              </div>
-              <div>
-                  <label>
-                    Question: <input name="question_input" size="100" defaultValue="How many people in the picture?" />
-                  </label>
-              </div>
-              <div>
-                  <label name="response_label">
-                    Response will be placed here...
-                  </label>
-              </div>
-              <div>
-                  <button type="submit">Submit question</button>
-              </div>
-            </form>
-        </div>            
+        <form className="App" onSubmit={handleSubmit}>
+          <div>
+            <h2>Select an Image:</h2>
+            <input type="file" accept=".jpg, .jpeg, .png" onChange={handleChange} />
+            <img src={imageSrc} alt=""/>
+          </div>
+          <div>
+              <label>
+                Question: <input name="question_input" size="100" defaultValue="How many people in the picture?" />
+              </label>
+          </div>
+          <div>
+              <label name="response_label">
+                Response will be placed here...
+              </label>
+          </div>
+          <div>
+              <button type="submit">Submit question</button>
+          </div>
+        </form>
     );
 }
