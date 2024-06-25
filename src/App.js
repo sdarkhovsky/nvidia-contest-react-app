@@ -4,7 +4,7 @@ import './App.css';
 //import Buffer from 'Buffer'
 
 
-const DEBUGGING_LOCAL = 1;
+const DEBUGGING_LOCAL = 0;
 const WEB_SERVICE_URL = "https://nvidia-contest-express-web-service.onrender.com";
 const LOCAL_URL = "http://localhost:10000";
 var service_url = WEB_SERVICE_URL;
