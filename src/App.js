@@ -15,6 +15,10 @@ export default function App() {
     const [imageSrc, setImageSrc] = useState();
     const [imageFile, setImageFile] = useState();
 
+    const Msg1 = 
+    "Please select an image using Browse button, enter a question and press Submit button to get an answer.";
+    const Msg2 = "No image is selected. " + Msg1;
+
     function handleChange(e) {
         setImageFile(e.target.files[0]);
         let url = URL.createObjectURL(e.target.files[0]);
@@ -76,6 +80,12 @@ export default function App() {
             */
             req.send(e.target.result);
         };
+        if (imageFile === undefined) {
+          let responseElement = document.getElementsByName("response_label");
+          responseElement[0].innerText = Msg2;
+
+          return;
+        }
         reader.readAsArrayBuffer(imageFile);
     }
 
@@ -85,7 +95,7 @@ export default function App() {
     return (
         <form className="App" onSubmit={handleSubmit}>
           <div>
-            <h2>Select an Image:</h2>
+            <h2>Ask questions about an image:</h2>
             <input type="file" accept=".jpeg" onChange={handleChange} />
             <img src={imageSrc} alt=""/>
           </div>
@@ -96,11 +106,11 @@ export default function App() {
           </div>
           <div>
               <label name="response_label" >
-                Response will be placed here...
+                {Msg1}
               </label>
           </div>
           <div>
-              <button type="submit">Submit question</button>
+              <button type="submit">Submit</button>
           </div>
         </form>
     );
