@@ -6,10 +6,15 @@ import './App.css';
 
 const DEBUGGING_LOCAL = 0;
 const WEB_SERVICE_URL = "https://nvidia-contest-express-web-service.onrender.com";
-const LOCAL_URL = "http://localhost:10000";
+const WEB_SITE_URL = "https://nvidia-contest-react-app.onrender.com"
+const LOCAL_SERVICE_URL = "http://localhost:10000";
+const LOCAL_SITE_URL = "http://localhost:3000"
 var service_url = WEB_SERVICE_URL;
-if (DEBUGGING_LOCAL)
-  service_url = LOCAL_URL;
+var site_url = WEB_SITE_URL;
+if (DEBUGGING_LOCAL) {
+  service_url = LOCAL_SERVICE_URL;
+  site_url = LOCAL_SITE_URL;
+}
 
 export default function App() {
     const [imageSrc, setImageSrc] = useState();
@@ -18,12 +23,30 @@ export default function App() {
     const Msg1 = 
     "Please select an image using Browse button, enter a question and press Submit button to get an answer.";
     const Msg2 = "No image is selected. " + Msg1;
+    const Msg3 = "Only JPEG images are accepted. " + Msg1;
+    const sample_image_file_name = "sample_image.jpeg";
+    const accepted_image_type = "image/jpeg";
 
-    function handleChange(e) {
-        setImageFile(e.target.files[0]);
-        let url = URL.createObjectURL(e.target.files[0]);
+    function setImageFileSrc(fileObj) {
+        setImageFile(fileObj);
+        const url = URL.createObjectURL(fileObj);
 
         setImageSrc(url);
+    }
+
+    if (imageFile === undefined) {
+      const initialImageURL = site_url + "/" + sample_image_file_name;
+      // the file data could be fetched as ArrayBuffer instead of blob
+      fetch(initialImageURL)
+        .then(res => res.blob()).then(playBlob => {
+            const initFile = new File([playBlob], sample_image_file_name, {type: accepted_image_type});
+
+            setImageFileSrc(initFile)
+          });
+    }
+
+    function handleChange(e) {
+        setImageFileSrc(e.target.files[0]);
     }    
 
     function reqListener() {
@@ -35,6 +58,12 @@ export default function App() {
 
         // Prevent the browser from reloading the page
         e.preventDefault();
+
+        if (imageFile.type !== accepted_image_type) {
+          let responseElement = document.getElementsByName("response_label");
+          responseElement[0].innerText = Msg3;
+          return;
+        }
 
         // Read the form data
         const form = e.target;
@@ -86,16 +115,15 @@ export default function App() {
 
           return;
         }
+
         reader.readAsArrayBuffer(imageFile);
     }
 
-
     // nvidia-contest_express-web-service/app.js currently accepts only imageFile.type "image/jpeg"
-    //             <input type="file" accept=".jpg, .jpeg, .png" onChange={handleChange} />
     return (
         <form className="App" onSubmit={handleSubmit}>
           <div>
-            <h2>Ask questions about an image:</h2>
+            <h2>Ask questions about an image</h2>
             <input type="file" accept=".jpeg" onChange={handleChange} />
             <img src={imageSrc} alt=""/>
           </div>
